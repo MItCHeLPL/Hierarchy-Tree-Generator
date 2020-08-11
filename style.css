@@ -20,6 +20,7 @@ input[type="button"]
     height: 2em;
     width: 15.5em;
     overflow: hidden;
+    margin-top: .8em;
 }
 
 select, option
@@ -33,6 +34,19 @@ select, option
     margin-top: 2em;
 }
 
+#generateButton
+{
+    font-weight: bolder;
+    border: solid 3px black;
+    height: 2.1em;
+    width: 15.6em;
+    border-radius: 4px;
+}
+#generateButton:hover
+{
+    background-color: #E5E5E5;
+}
+
 .GenerationBox
 {
     float:left;
@@ -40,7 +54,7 @@ select, option
     margin-bottom: 3em;
 }
 
-#GenerationButtonBox, #finalButtonBox
+#GenerationButtonBox
 {
     padding-top: 3.5em;
 }
@@ -82,7 +96,7 @@ svg
     z-index: 1;
     fill:rgb(255,255,255);
     fill-opacity:100%;
-    stroke-width:3;
+    stroke-width:1;
     stroke:rgb(0,0,0);
     stroke-linecap: round;
 }

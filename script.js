@@ -2,10 +2,10 @@
 var generations = 
 [
     [//X1
-        ["Parent Gen1", null], //Y1 //Y Name, Y in X-1 as Parent
+        ["Parent1 Gen1", null], //Y1 //Y Name, Y in X-1 as Parent
     ],
     [//X2
-        ["Child Gen2", 0], //Y1
+        ["Child1 Gen2", 0], //Y1
     ]
 ];
 
@@ -96,12 +96,12 @@ function AddInput(X, Y, where, addSelect)
         newStructure.innerHTML += "<select name='select" + (X-1) + "GenerationParent' class='select" + (X-1) + "GenerationParent' id='select"+X+"Generation"+Y+"Object' onchange='ChangeParent(this, " + X + ", " + Y + ")'></select><br />";
 
         //Add input
-        newStructure.innerHTML += "<input type='text' id='" + X + "Generation" + Y + "Object' placeholder='Child Gen" + X + "' onchange='SaveObject(" + idNameToString + ", " + X + ", " + Y + ")' />";
+        newStructure.innerHTML += "<input type='text' id='" + X + "Generation" + Y + "Object' placeholder='Child" + Y + " Gen" + X + "' onchange='SaveObject(" + idNameToString + ", " + X + ", " + Y + ")' />";
     }
     else
     {
         //Add input
-        newStructure.innerHTML += "<input type='text' id='" + X + "Generation" + Y + "Object' placeholder='Parent Gen" + X + "' onchange='SaveObject(" + idNameToString + ", " + X + ", " + Y + ")' />";
+        newStructure.innerHTML += "<input type='text' id='" + X + "Generation" + Y + "Object' placeholder='Parent" + Y + " Gen" + X + "' onchange='SaveObject(" + idNameToString + ", " + X + ", " + Y + ")' />";
     }
 
     //insert structure into page
@@ -118,11 +118,11 @@ function AddInput(X, Y, where, addSelect)
     //Expand array
     if(addSelect)
     {
-        generations[X-1].push(["Child Gen" + X + "", 0]); //If child then default parent to first parent
+        generations[X-1].push(["Child" + Y + " Gen" + X + "", 0]); //If child then default parent to first parent
     }
     else
     {
-        generations[X-1].push(["Parent Gen" + X + "", null]); //if parent then default parent to null
+        generations[X-1].push(["Parent" + Y + " Gen" + X + "", null]); //if parent then default parent to null
     }
 
     //Update all selects in this generation
@@ -278,7 +278,7 @@ var svgCurrentY = 50;
 var generationYOffset = 50;
 
 //Rect
-var rectWidth = 50;
+var rectWidth = 150;
 var rectHeight = 30;
 
 function GenerateTree()
@@ -293,39 +293,38 @@ function GenerateTree()
     //Set Graph height for amount of generations + 3px for stroke fill 
     svg.setAttribute("height", (generations.length * generationYOffset) + 3);
 
-    //Middle of the page
-    var middle = svg.clientWidth/2;
-
     //Generate 
 
     //TEMP
-    GenerateObject(middle, "Test"); //Object
+    GenerateObject((svg.clientWidth/2), "Parent1 Gen1"); //Object
 
-    GenerateLine(middle, middle, true, true); //down
+    GenerateLine((svg.clientWidth/2), (svg.clientWidth/2), true, true); //down
 
-    GenerateLine(middle, (svg.clientWidth/4));  //left
-    GenerateLine(middle, (svg.clientWidth - (svg.clientWidth/4)));  //right
+    GenerateLine((svg.clientWidth/2), (svg.clientWidth/4));  //left
+    GenerateLine((svg.clientWidth/2), (svg.clientWidth - (svg.clientWidth/4)));  //right
 
-    GenerateObject((svg.clientWidth/4), "Test"); //Object left
-    GenerateObject((svg.clientWidth - (svg.clientWidth/4)), "Test"); //Object right
+    GenerateObject((svg.clientWidth/4), "Child1 Gen2"); //Object left
+    GenerateObject((svg.clientWidth - (svg.clientWidth/4)), "Child2 Gen2"); //Object right
 
     GenerateLine((svg.clientWidth/4), (svg.clientWidth/4), true); //left down
     GenerateLine((svg.clientWidth - (svg.clientWidth/4)), (svg.clientWidth - (svg.clientWidth/4)), true, true); //right down
 
     GenerateLine((svg.clientWidth/4), (svg.clientWidth/8));  //left left
-    GenerateLine((svg.clientWidth/4), (middle-(svg.clientWidth/8)));  //left right
-    GenerateLine((svg.clientWidth - (svg.clientWidth/4)), (middle+(svg.clientWidth/8)));  //right left
+    GenerateLine((svg.clientWidth/4), ((svg.clientWidth/2)-(svg.clientWidth/8)));  //left right
+    GenerateLine((svg.clientWidth - (svg.clientWidth/4)), ((svg.clientWidth/2)+(svg.clientWidth/8)));  //right left
     GenerateLine((svg.clientWidth - (svg.clientWidth/4)), (svg.clientWidth - (svg.clientWidth/8)));  //right right
 
-    GenerateObject((svg.clientWidth/8), "Test"); //Object left left
-    GenerateObject((middle-(svg.clientWidth/8)), "Test"); //Object left right
-    GenerateObject((middle+(svg.clientWidth/8)), "Test"); //Object right left
-    GenerateObject((svg.clientWidth - (svg.clientWidth/8)), "Test"); //Object right right
+    GenerateObject((svg.clientWidth/8), "Child1 Gen3"); //Object left left
+    GenerateObject(((svg.clientWidth/2)-(svg.clientWidth/8)), "Child2 Gen3"); //Object left right
+    GenerateObject(((svg.clientWidth/2)+(svg.clientWidth/8)), "Child3 Gen3"); //Object right left
+    GenerateObject((svg.clientWidth - (svg.clientWidth/8)), "Child4 Gen3"); //Object right right
 
     GenerateLine((svg.clientWidth/8), (svg.clientWidth/8), true); //left left down
-    GenerateLine((middle+(svg.clientWidth/8)), (middle+(svg.clientWidth/8)), true); //left right down
-    GenerateLine((middle-(svg.clientWidth/8)), (middle-(svg.clientWidth/8)), true); //right left down
+    GenerateLine(((svg.clientWidth/2)+(svg.clientWidth/8)), ((svg.clientWidth/2)+(svg.clientWidth/8)), true); //left right down
+    GenerateLine(((svg.clientWidth/2)-(svg.clientWidth/8)), ((svg.clientWidth/2)-(svg.clientWidth/8)), true); //right left down
     GenerateLine((svg.clientWidth - (svg.clientWidth/8)), (svg.clientWidth - (svg.clientWidth/8)), true, true); //right right down
+
+    console.log(generations);
 }
 
 //Generate Line
@@ -348,7 +347,7 @@ function GenerateLine(fromX, ToX, changeY, changeCurrentY)
 //Generate Object from generations
 function GenerateObject(rectX, text)
 {
-    svg.innerHTML += "<rect x='" + (rectX - (rectWidth/2)) + "' y='" + (svgCurrentY - rectHeight) + "' width='" + rectWidth + "' height='" + rectHeight + "' class='svgRect' />"; //Rectangle
+    svg.innerHTML += "<rect x='" + (rectX - (rectWidth/2)) + "' y='" + ((svgCurrentY - rectHeight) + 1 ) + "' width='" + rectWidth + "' height='" + rectHeight + "' class='svgRect' />"; //Rectangle
 
-    svg.innerHTML += "<text x='" + (rectX - (rectWidth/2)) + "' y='" + ((svgCurrentY - rectHeight) + (rectWidth/2.5)) + "' class='svgText'>" + text + "</text>" //Text
+    svg.innerHTML += "<text x='" + (rectX - (rectWidth/2.1)) + "' y='" + ((svgCurrentY - rectHeight) + (rectWidth/7)) + "' class='svgText'>" + text + "</text>" //Text
 }
