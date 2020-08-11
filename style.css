@@ -11,6 +11,38 @@ input
 input[type="text"]
 {
     margin-bottom: .5em;
+    height: 1.5em;
+    width: 15em;
+}
+
+input[type="button"]
+{
+    height: 2em;
+    width: 15.5em;
+    overflow: hidden;
+}
+
+select, option
+{
+    height: 2em;
+    width: 15.5em;
+}
+
+.firstParent input[type="text"]
+{
+    margin-top: 2em;
+}
+
+.GenerationBox
+{
+    float:left;
+    margin-right:2.5em;
+    margin-bottom: 3em;
+}
+
+#GenerationButtonBox, #finalButtonBox
+{
+    padding-top: 3.5em;
 }
 
 #settingsBox
@@ -21,18 +53,33 @@ input[type="text"]
     width:100%;
 }
 
-.GenerationBox
+
+svg
 {
-    float:left;
-    margin-right:2.5em;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
 }
 
-#1GenerationBox input[type="text"]
+.svgLine
 {
-    margin-top: 10em;
+    z-index: 0;
+    stroke:rgb(0,0,0);
+    stroke-width:5;
 }
 
+.svgRect
+{
+    z-index: 1;
+    fill:rgb(255,255,255);
+    stroke-width:3;
+    stroke:rgb(0,0,0)
+}
 
+.svgText
+{
+    z-index: 2;
+}
 
 #treeBox
 {

@@ -130,6 +130,28 @@ function AddInput(X, Y, where, addSelect)
     {
         UpdateSelect(X);
     }
+
+    //Find Highest generation
+    var maxHeight = 1;
+    var maxHeightId = 1;
+
+    for(var i=0; i<generations.length; i++)
+    {
+        if(parseInt(generations[i].length) > parseInt(maxHeight))
+        {
+            maxHeight = generations[i].length;
+            maxHeightId = i;
+        }
+    }
+
+    //Get hight of highest generation
+    var highest = document.getElementById((maxHeightId+1) + "GenerationBox").scrollHeight;
+
+    //Resize height of other generations
+    for(var i=0; i<generations.length; i++)
+    {
+        document.getElementById((i+1) + "GenerationBox").setAttribute("style", "height: " + highest + "px;");
+    }
 }
 
 function RemoveInput(X, Y, id, addSelect)
@@ -194,8 +216,8 @@ function AddGeneration(X)
     newStructure.innerHTML += "<h3>" + X + " Generation</h3>";
     newStructure.innerHTML += "<div id='" + X + "GenerationInputs'></div>";
 
+    newStructure.innerHTML += "<input type='button' style='display: none;' id='" + X + "GenerationRemoveInputButton' value='Remove Object' onclick='RemoveInput(" + X + ", 1, '" + X + "Generation1Input', true)' /><br />";
     newStructure.innerHTML += "<input type='button' id='" + X + "GenerationAddInputButton' value='Add Object' onclick='AddInput(" + X + ", 2, '" + X + "GenerationInputs', true)' />"
-    newStructure.innerHTML += "<input type='button' style='display: none;' id='" + X + "GenerationRemoveInputButton' value='Remove Object' onclick='RemoveInput(" + X + ", 1, '" + X + "Generation1Input', true)' />";
 
     //insert structure into page
     document.getElementById("generationsBox").appendChild(newStructure);
@@ -248,5 +270,50 @@ function RemoveGeneration(X)
 
 function GenerateTree()
 {
+    //Get SVG
+    var svg = document.getElementById("svgOutput");
+
+    //How deep down are you
+    var currentY = 0;
+
+    //Middle of the page
+    var middle = svg.clientWidth/2;
+
+    //Y offset between generations
+    var generationYOffset = 50;
+
+    //Rect
+    var rectWidth = 50;
+    var rectHeight = 30;
+
+    //Objects Here
+    svg.innerHTML += "<rect x='" + (middle - (rectWidth/2)) + "' y='" + currentY + "' width='" + rectWidth + "' height='" + rectHeight + "' class='svgRect' />"; //Rectangle
+    svg.innerHTML += "<text x='" + middle + "' y='" + currentY + "' fill='black'>" + /*Text*/"JD" + "</text>" //Text
+
+    svg.innerHTML += "<line x1='" + middle + "' y1='" + currentY + "' x2='" + middle + "' y2='" + (currentY + generationYOffset) + "' class='svgLine' />"; //down
+    currentY += generationYOffset;
+
+    svg.innerHTML += "<line x1='" + middle + "' y1='" + currentY + "' x2='" + (svg.clientWidth/4) + "' y2='" + currentY + "' class='svgLine' />"; //left
+    svg.innerHTML += "<line x1='" + middle + "' y1='" + currentY + "' x2='" + (svg.clientWidth - (svg.clientWidth/4)) + "' y2='" + currentY + "' class='svgLine' />"; //right
+
+    //Objects Here
+
+    svg.innerHTML += "<line x1='" + (svg.clientWidth/4) + "' y1='" + currentY + "' x2='" + (svg.clientWidth/4) + "' y2='" + (currentY + generationYOffset) + "' class='svgLine' />"; //left down
+    svg.innerHTML += "<line x1='" + (svg.clientWidth - (svg.clientWidth/4)) + "' y1='" + currentY + "' x2='" + (svg.clientWidth - (svg.clientWidth/4)) + "' y2='" + (currentY + generationYOffset) + "' class='svgLine' />"; //right down
+    currentY += generationYOffset;
+
+    svg.innerHTML += "<line x1='" + (svg.clientWidth/4) + "' y1='" + currentY + "' x2='" + (svg.clientWidth/8) + "' y2='" + currentY + "' class='svgLine' />"; //left left
+    svg.innerHTML += "<line x1='" + (svg.clientWidth/4) + "' y1='" + currentY + "' x2='" + (middle-(svg.clientWidth/8)) + "' y2='" + currentY + "' class='svgLine' />"; //left right
+    svg.innerHTML += "<line x1='" + (svg.clientWidth - (svg.clientWidth/4)) + "' y1='" + currentY + "' x2='" + (middle+(svg.clientWidth/8)) + "' y2='" + currentY + "' class='svgLine' />"; //right left
+    svg.innerHTML += "<line x1='" + (svg.clientWidth - (svg.clientWidth/4)) + "' y1='" + currentY + "' x2='" + (svg.clientWidth - (svg.clientWidth/8)) + "' y2='" + currentY + "' class='svgLine' />"; //right right
+
+    //Objects Here
+
+    svg.innerHTML += "<line x1='" + (svg.clientWidth/8) + "' y1='" + currentY + "' x2='" + (svg.clientWidth/8) + "' y2='" + (currentY + generationYOffset) + "' class='svgLine' />"; //left left down
+    svg.innerHTML += "<line x1='" + (middle+(svg.clientWidth/8)) + "' y1='" + currentY + "' x2='" + (middle+(svg.clientWidth/8)) + "' y2='" + (currentY + generationYOffset) + "' class='svgLine' />"; //left right down
+    svg.innerHTML += "<line x1='" + (middle-(svg.clientWidth/8)) + "' y1='" + currentY + "' x2='" + (middle-(svg.clientWidth/8)) + "' y2='" + (currentY + generationYOffset) + "' class='svgLine' />"; //right left down
+    svg.innerHTML += "<line x1='" + (svg.clientWidth - (svg.clientWidth/8)) + "' y1='" + currentY + "' x2='" + (svg.clientWidth - (svg.clientWidth/8)) + "' y2='" + (currentY + generationYOffset) + "' class='svgLine' />"; //right right down
+    currentY += generationYOffset;
     
+    //Objects Here
 }

@@ -16,7 +16,7 @@
 
             <div id="generationsBox">
 
-                <div id="1GenerationBox" class="GenerationBox">
+                <div id="1GenerationBox" class="GenerationBox firstParent">
                     <h3>1 Generation</h3>
 
                     <div id="1GenerationInputs">
@@ -25,8 +25,8 @@
                         </div>
                     </div>
 
+                    <input type="button" style="display: none;" id="1GenerationRemoveInputButton" value="Remove Object" onclick="RemoveInput(1, 1, '2Generation1Object', false)" /><br />
                     <input type="button" id="1GenerationAddInputButton" value="Add Object" onclick="AddInput(1, 2, '1GenerationInputs', false)" />
-                    <input type="button" style="display: none;" id="1GenerationRemoveInputButton" value="Remove Object" onclick="RemoveInput(1, 1, '2Generation1Object', false)" />
                 </div>
 
                 <div id="2GenerationBox" class="GenerationBox">
@@ -41,8 +41,8 @@
                         </div>
                     </div>
 
+                    <input type="button" style="display: none;" id="2GenerationRemoveInputButton" value="Remove Object" onclick="RemoveInput(2, 1, '2Generation1Input', true)" /><br />
                     <input type="button" id="2GenerationAddInputButton" value="Add Object" onclick="AddInput(2, 2, '2GenerationInputs', true)" />
-                    <input type="button" style="display: none;" id="2GenerationRemoveInputButton" value="Remove Object" onclick="RemoveInput(2, 1, '2Generation1Input', true)" />
                 </div>
 
             </div>
