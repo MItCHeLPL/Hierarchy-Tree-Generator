@@ -206,6 +206,9 @@ function AddGeneration(X)
     //Add first object
     AddInput(X, 1, X + "GenerationInputs", true);
 
+    //Hide remove input button
+    document.getElementById(X + "GenerationRemoveInputButton").style.display = "none";
+
     //Change Add button function
     document.getElementById("addGenerationButton").setAttribute("onClick", "AddGeneration(" + (X+1) + ")");
 
@@ -217,14 +220,33 @@ function AddGeneration(X)
 
 function RemoveGeneration(X)
 {
-    //TEMP If X > 2
+    if(generations.length > 2)
+    {
+        //Get structure
+        var structure = document.getElementById(X + "GenerationBox");
 
+        //Remove structure from page
+        structure.parentNode.removeChild(structure);
 
-    
+        //Change Add button function
+        document.getElementById("addGenerationButton").setAttribute("onClick", "AddGeneration(" + X + ")");
+
+        //Change Remove button function
+        document.getElementById("RemoveGenerationButton").setAttribute("onClick", "RemoveGeneration(" + (X-1) + ")");
+        
+        //Hide remove button if 1 child left
+        if(X-1 == 2)
+        {
+            document.getElementById("RemoveGenerationButton").style.display = "none";
+        }
+
+        //Shrink array
+        generations.pop();
+    }
 }
 
 
 function GenerateTree()
 {
-    //TEMP manipulate svg
+    
 }
