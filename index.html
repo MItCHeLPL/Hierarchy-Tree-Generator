@@ -26,7 +26,7 @@
                     </div>
 
                     <input type="button" id="1GenerationAddInputButton" value="Add Object" onclick="AddInput(1, 2, '1GenerationInputs', false)" />
-                    <input type="button" id="1GenerationRemoveInputButton" value="Remove Object" onclick="RemoveInput('1Generation1Input')" />
+                    <input type="button" style="display: none;" id="1GenerationRemoveInputButton" value="Remove Object" onclick="RemoveInput(1, 1, '2Generation1Object', false)" />
                 </div>
 
                 <div id="2GenerationBox" class="GenerationBox">
@@ -34,7 +34,7 @@
 
                     <div id="2GenerationInputs">
                         <div id="2Generation1Input">
-                            <select name="select1GenerationParent" class="select1GenerationParent" onchange="ChangeParent(this, 2, 1)">
+                            <select name="select1GenerationParent" class="select1GenerationParent" id="select2Generation1Object" onchange="ChangeParent(this, 2, 1)">
                                 <option value="0">Parent</option>
                             </select><br />
                             <input type="text" id="2Generation1Object" onchange="SaveObject('2Generation1Object', 2, 1)" placeholder="Child" />
@@ -42,14 +42,14 @@
                     </div>
 
                     <input type="button" id="2GenerationAddInputButton" value="Add Object" onclick="AddInput(2, 2, '2GenerationInputs', true)" />
-                    <input type="button" id="2GenerationRemoveInputButton" value="Remove Object" onclick="RemoveInput('2Generation1Input')" />
+                    <input type="button" style="display: none;" id="2GenerationRemoveInputButton" value="Remove Object" onclick="RemoveInput(2, 1, '2Generation1Input', true)" />
                 </div>
 
             </div>
 
             <div id="GenerationButtonBox" class="GenerationBox">
                 <input type="button" id="addGenerationButton" value="Add Generation" onclick="AddGeneration()" /><br />
-                <input type="button" id="RemoveGenerationButton" value="Remove Generation" onclick="RemoveGeneration()" />
+                <input type="button" style="display: none;" id="RemoveGenerationButton" value="Remove Generation" onclick="RemoveGeneration()" />
             </div>
 
             <div id="finalButtonBox" class="GenerationBox">

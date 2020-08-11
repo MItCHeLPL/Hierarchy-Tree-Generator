@@ -4,7 +4,7 @@ var generations =
         ["Parent", null], //Y1 //Y Name, Y in X-1 as Parent
     ],
     [//X2
-        ["Child", "0"], //Y1
+        ["Child", 0], //Y1
     ]
 ];
 
@@ -64,6 +64,9 @@ function UpdateSelect(X)
     for(var j=0; j<selectClass.length; j++)
     {
         selectClass[j].innerHTML = options;
+
+        //Preserve previously chosen parent
+        selectClass[j].selectedIndex = generations[X-1][j][1];
     }
 }
 
@@ -71,7 +74,7 @@ function UpdateSelect(X)
 function ChangeParent(option, X, Y)
 {
     //Set parent to chosen parent (-1 because array starts from 0)
-    generations[X-1][Y-1][1] = option.value;
+    generations[X-1][Y-1][1] = document.getElementById("select"+X+"Generation"+Y+"Object").options.selectedIndex;
 }
 
 function AddInput(X, Y, where, addSelect)
@@ -98,16 +101,23 @@ function AddInput(X, Y, where, addSelect)
     //Give ID to the structure
     newStructure.id = X + "Generation" + Y + "Input";
 
+    //Separate to avoid " ' errors
+    var idNameToString = '"' + X + 'Generation' + Y + 'Object"'; 
+
     //Fill structure with elements
     if(addSelect)
     {
         //Add select
-        newStructure.innerHTML += "<select name='select" + (X-1) + "GenerationParent' class='select" + (X-1) + "GenerationParent' onchange='ChangeParent(this, " + X + ", " + Y + ")'>";
-        newStructure.innerHTML += "</select><br />"
+        newStructure.innerHTML += "<select name='select" + (X-1) + "GenerationParent' class='select" + (X-1) + "GenerationParent' id='select"+X+"Generation"+Y+"Object' onchange='ChangeParent(this, " + X + ", " + Y + ")'></select><br />";
+
+        //Add input
+        newStructure.innerHTML += "<input type='text' id='" + X + "Generation" + Y + "Object' placeholder='Child' onchange='SaveObject(" + idNameToString + ", " + X + ", " + Y + ")' />";
     }
-    var idNameToString = '"' + X + 'Generation' + Y + 'Object"'; //Separate to avoid " ' errors
-    //Add input
-    newStructure.innerHTML += "<input type='text' id='" + X + "Generation" + Y + "Object' onchange='SaveObject(" + idNameToString + ", " + X + ", " + Y + ")' />";
+    else
+    {
+        //Add input
+        newStructure.innerHTML += "<input type='text' id='" + X + "Generation" + Y + "Object' placeholder='Parent' onchange='SaveObject(" + idNameToString + ", " + X + ", " + Y + ")' />";
+    }
 
     //insert structure into page
     document.getElementById(where).appendChild(newStructure);
@@ -115,26 +125,76 @@ function AddInput(X, Y, where, addSelect)
     //Change Add button function
     document.getElementById(X + "GenerationAddInputButton").setAttribute("onClick", "AddInput(" + X + ", " + parseInt(Y+1) + ", '" + X + "GenerationInputs', " + addSelect + ")");
 
+    //Show remove button
+    document.getElementById(X + "GenerationRemoveInputButton").style.display = "inline";
+    //Change Remove button function
+    document.getElementById(X + "GenerationRemoveInputButton").setAttribute("onClick", "RemoveInput(" + X + ", " + parseInt(Y) + ", '" + X + "Generation" + parseInt(Y) + "Input', " + addSelect + ")");
+
+    //Expand array
+    if(addSelect)
+    {
+        generations[X-1].push(["Child", 0]); //If child then default parent to first parent
+    }
+    else
+    {
+        generations[X-1].push(["Parent", null]); //if parent then default parent to null
+    }
+
     //Update all selects in this generation
     if(addSelect)
     {
         UpdateSelect(X);
     }
-
-    //Expand array
-    if(addSelect)
-    {
-        generations[X-1].push(["", generations[X-2][0]]); //If child then default parent to first parent
-    }
-    else
-    {
-        generations[X-1].push(["", null]); //if parent then default parent to null
-    }
 }
 
-function RemoveInput()
+function RemoveInput(X, Y, id, addSelect)
 {
     //TEMP If Y in this X is > 1
+
+    if(generations[X-1].length > 1)
+    {
+        //Get structure
+        var structure = document.getElementById(id);
+
+        //Remove structure from page
+        structure.parentNode.removeChild(structure);
+
+        //Change Add button function
+        document.getElementById(X + "GenerationAddInputButton").setAttribute("onClick", "AddInput(" + X + ", " + parseInt(Y) + ", '" + X + "GenerationInputs', " + addSelect + ")");
+
+        //Change Remove button function
+        document.getElementById(X + "GenerationRemoveInputButton").setAttribute("onClick", "RemoveInput(" + X + ", " + parseInt(Y-1) + ", '" + X + "Generation" + parseInt(Y-1) + "Input', " + addSelect + ")");
+        //Hide remove button if 1 child left
+        if(Y-1 == 1)
+        {
+            document.getElementById(X + "GenerationRemoveInputButton").style.display = "none";
+        }
+
+        //Update all selects in this generation
+        if(addSelect)
+        {
+            UpdateSelect(X);
+        }
+
+        //Shrink array
+        generations[X-1].pop();
+
+        //Change parent in children if parent was deleted
+        if(generations.length > X)
+        {
+            for(var i=0; i<generations[X].length; i++)
+            {
+                //If Child had selected deleted parent
+                if(generations[X][i][1] == Y-1)
+                {
+                    //Newest alive parent
+                    generations[X][i][1] = Y-2;
+                }
+            }
+
+            UpdateSelect(X+1);
+        }
+    }
 }
 
 function AddGeneration()

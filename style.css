@@ -8,6 +8,11 @@ input
     font-family: "Lucida Console", Monaco, monospace; 
 }
 
+input[type="text"]
+{
+    margin-bottom: .5em;
+}
+
 #settingsBox
 {
     margin:0;
