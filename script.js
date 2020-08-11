@@ -1,10 +1,11 @@
+//Generation array
 var generations = 
 [
     [//X1
-        ["Parent", null], //Y1 //Y Name, Y in X-1 as Parent
+        ["Parent Gen1", null], //Y1 //Y Name, Y in X-1 as Parent
     ],
     [//X2
-        ["Child", 0], //Y1
+        ["Child Gen2", 0], //Y1
     ]
 ];
 
@@ -79,22 +80,6 @@ function ChangeParent(option, X, Y)
 
 function AddInput(X, Y, where, addSelect)
 {
-
-    /*TEMP
-    Add when addSelect is false into div id="X GenerationInputs", 
-        <div id="X Generation Y Input">
-            <input type="text" id=" X Generation Y Object" onchange="SaveObject('X Generation Y Object')" /><br />
-        </div>
-
-    When addSelect is true into div id="X GenerationInputs"
-        <div id="X Generation Y Input">
-            <select name="select X-1 GenerationParent" id="select X-1 GenerationParent">
-                <option value="X-1 GenerationObject Y">X-1 GenerationObject Y value</option>
-            </select><br />
-            <input type="text" id="X Generation Y Object" onchange="SaveObject('X Generation Y Object')" />
-        </div>
-    */
-
     //Create structure
     var newStructure = document.createElement("div");
 
@@ -111,12 +96,12 @@ function AddInput(X, Y, where, addSelect)
         newStructure.innerHTML += "<select name='select" + (X-1) + "GenerationParent' class='select" + (X-1) + "GenerationParent' id='select"+X+"Generation"+Y+"Object' onchange='ChangeParent(this, " + X + ", " + Y + ")'></select><br />";
 
         //Add input
-        newStructure.innerHTML += "<input type='text' id='" + X + "Generation" + Y + "Object' placeholder='Child' onchange='SaveObject(" + idNameToString + ", " + X + ", " + Y + ")' />";
+        newStructure.innerHTML += "<input type='text' id='" + X + "Generation" + Y + "Object' placeholder='Child Gen" + X + "' onchange='SaveObject(" + idNameToString + ", " + X + ", " + Y + ")' />";
     }
     else
     {
         //Add input
-        newStructure.innerHTML += "<input type='text' id='" + X + "Generation" + Y + "Object' placeholder='Parent' onchange='SaveObject(" + idNameToString + ", " + X + ", " + Y + ")' />";
+        newStructure.innerHTML += "<input type='text' id='" + X + "Generation" + Y + "Object' placeholder='Parent Gen" + X + "' onchange='SaveObject(" + idNameToString + ", " + X + ", " + Y + ")' />";
     }
 
     //insert structure into page
@@ -133,11 +118,11 @@ function AddInput(X, Y, where, addSelect)
     //Expand array
     if(addSelect)
     {
-        generations[X-1].push(["Child", 0]); //If child then default parent to first parent
+        generations[X-1].push(["Child Gen" + X + "", 0]); //If child then default parent to first parent
     }
     else
     {
-        generations[X-1].push(["Parent", null]); //if parent then default parent to null
+        generations[X-1].push(["Parent Gen" + X + "", null]); //if parent then default parent to null
     }
 
     //Update all selects in this generation
@@ -149,8 +134,6 @@ function AddInput(X, Y, where, addSelect)
 
 function RemoveInput(X, Y, id, addSelect)
 {
-    //TEMP If Y in this X is > 1
-
     if(generations[X-1].length > 1)
     {
         //Get structure
@@ -192,35 +175,52 @@ function RemoveInput(X, Y, id, addSelect)
                 }
             }
 
+            //Refresh select
             UpdateSelect(X+1);
         }
     }
 }
 
-function AddGeneration()
+function AddGeneration(X)
 {
+    //Create structure
+    var newStructure = document.createElement("div");
 
-    /*TEMP
-    Add into div id="generationsBox",
-        <div id="X GenerationBox" class="GenerationBox">
-            <h3>X Generation</h3>
+    //Give ID and class to the structure
+    newStructure.id = X + "GenerationBox";
+    newStructure.classList += "GenerationBox";
 
-            <div id="X GenerationInputs">
-                
-                AddInput("X GenerationInputs", true);
+    //Fill Generation box
+    newStructure.innerHTML += "<h3>" + X + " Generation</h3>";
+    newStructure.innerHTML += "<div id='" + X + "GenerationInputs'></div>";
 
-            </div>
+    newStructure.innerHTML += "<input type='button' id='" + X + "GenerationAddInputButton' value='Add Object' onclick='AddInput(" + X + ", 2, '" + X + "GenerationInputs', true)' />"
+    newStructure.innerHTML += "<input type='button' style='display: none;' id='" + X + "GenerationRemoveInputButton' value='Remove Object' onclick='RemoveInput(" + X + ", 1, '" + X + "Generation1Input', true)' />";
 
-            <input type="button" id="X GenerationAddInputButton" value="Add Object" onclick="AddInput('X GenerationInputs')" />
-            <input type="button" id="X GenerationRemoveInputButton" value="Remove Object" onclick="RemoveInput('X Generation Y Input')" />
-        </div>
-    */
+    //insert structure into page
+    document.getElementById("generationsBox").appendChild(newStructure);
 
+    //Expand array
+    generations.push([]);
+
+    //Add first object
+    AddInput(X, 1, X + "GenerationInputs", true);
+
+    //Change Add button function
+    document.getElementById("addGenerationButton").setAttribute("onClick", "AddGeneration(" + (X+1) + ")");
+
+    //Show remove button
+    document.getElementById("RemoveGenerationButton").style.display = "inline";
+    //Change Remove button function
+    document.getElementById("RemoveGenerationButton").setAttribute("onClick", "RemoveGeneration(" + X + ")");
 }
 
-function RemoveGeneration()
+function RemoveGeneration(X)
 {
     //TEMP If X > 2
+
+
+    
 }
 
 

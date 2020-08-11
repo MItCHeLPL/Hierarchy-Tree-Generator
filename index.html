@@ -21,7 +21,7 @@
 
                     <div id="1GenerationInputs">
                         <div id="1Generation1Input">
-                            <input type="text" id="1Generation1Object" onchange="SaveObject('1Generation1Object', 1, 1)" placeholder="Parent" />
+                            <input type="text" id="1Generation1Object" onchange="SaveObject('1Generation1Object', 1, 1)" placeholder="Parent 1Gen" />
                         </div>
                     </div>
 
@@ -35,9 +35,9 @@
                     <div id="2GenerationInputs">
                         <div id="2Generation1Input">
                             <select name="select1GenerationParent" class="select1GenerationParent" id="select2Generation1Object" onchange="ChangeParent(this, 2, 1)">
-                                <option value="0">Parent</option>
+                                <option value="0">Parent Gen1</option>
                             </select><br />
-                            <input type="text" id="2Generation1Object" onchange="SaveObject('2Generation1Object', 2, 1)" placeholder="Child" />
+                            <input type="text" id="2Generation1Object" onchange="SaveObject('2Generation1Object', 2, 1)" placeholder="Child 2Gen" />
                         </div>
                     </div>
 
@@ -48,8 +48,8 @@
             </div>
 
             <div id="GenerationButtonBox" class="GenerationBox">
-                <input type="button" id="addGenerationButton" value="Add Generation" onclick="AddGeneration()" /><br />
-                <input type="button" style="display: none;" id="RemoveGenerationButton" value="Remove Generation" onclick="RemoveGeneration()" />
+                <input type="button" id="addGenerationButton" value="Add Generation" onclick="AddGeneration(3)" /><br />
+                <input type="button" style="display: none;" id="RemoveGenerationButton" value="Remove Generation" onclick="RemoveGeneration(2)" />
             </div>
 
             <div id="finalButtonBox" class="GenerationBox">

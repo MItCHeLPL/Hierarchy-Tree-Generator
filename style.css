@@ -27,6 +27,13 @@ input[type="text"]
     margin-right:2.5em;
 }
 
+#1GenerationBox input[type="text"]
+{
+    margin-top: 10em;
+}
+
+
+
 #treeBox
 {
     margin:0;
