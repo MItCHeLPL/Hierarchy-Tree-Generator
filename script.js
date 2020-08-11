@@ -267,53 +267,88 @@ function RemoveGeneration(X)
     }
 }
 
+//SVG
+
+var svg = document.getElementById("svgOutput");
+
+//How deep down are you, start from 50 so objects can fit
+var svgCurrentY = 50;
+
+//Y offset between generations
+var generationYOffset = 50;
+
+//Rect
+var rectWidth = 50;
+var rectHeight = 30;
 
 function GenerateTree()
-{
+{  
     //Get SVG
-    var svg = document.getElementById("svgOutput");
+    svg = document.getElementById("svgOutput");
 
-    //How deep down are you
-    var currentY = 0;
+    //Clear SVG
+    svg.innerHTML = "";
+    svgCurrentY = 50;
+
+    //Set Graph height for amount of generations + 3px for stroke fill 
+    svg.setAttribute("height", (generations.length * generationYOffset) + 3);
 
     //Middle of the page
     var middle = svg.clientWidth/2;
 
-    //Y offset between generations
-    var generationYOffset = 50;
+    //Generate 
 
-    //Rect
-    var rectWidth = 50;
-    var rectHeight = 30;
+    //TEMP
+    GenerateObject(middle, "Test"); //Object
 
-    //Objects Here
-    svg.innerHTML += "<rect x='" + (middle - (rectWidth/2)) + "' y='" + currentY + "' width='" + rectWidth + "' height='" + rectHeight + "' class='svgRect' />"; //Rectangle
-    svg.innerHTML += "<text x='" + middle + "' y='" + currentY + "' fill='black'>" + /*Text*/"JD" + "</text>" //Text
+    GenerateLine(middle, middle, true, true); //down
 
-    svg.innerHTML += "<line x1='" + middle + "' y1='" + currentY + "' x2='" + middle + "' y2='" + (currentY + generationYOffset) + "' class='svgLine' />"; //down
-    currentY += generationYOffset;
+    GenerateLine(middle, (svg.clientWidth/4));  //left
+    GenerateLine(middle, (svg.clientWidth - (svg.clientWidth/4)));  //right
 
-    svg.innerHTML += "<line x1='" + middle + "' y1='" + currentY + "' x2='" + (svg.clientWidth/4) + "' y2='" + currentY + "' class='svgLine' />"; //left
-    svg.innerHTML += "<line x1='" + middle + "' y1='" + currentY + "' x2='" + (svg.clientWidth - (svg.clientWidth/4)) + "' y2='" + currentY + "' class='svgLine' />"; //right
+    GenerateObject((svg.clientWidth/4), "Test"); //Object left
+    GenerateObject((svg.clientWidth - (svg.clientWidth/4)), "Test"); //Object right
 
-    //Objects Here
+    GenerateLine((svg.clientWidth/4), (svg.clientWidth/4), true); //left down
+    GenerateLine((svg.clientWidth - (svg.clientWidth/4)), (svg.clientWidth - (svg.clientWidth/4)), true, true); //right down
 
-    svg.innerHTML += "<line x1='" + (svg.clientWidth/4) + "' y1='" + currentY + "' x2='" + (svg.clientWidth/4) + "' y2='" + (currentY + generationYOffset) + "' class='svgLine' />"; //left down
-    svg.innerHTML += "<line x1='" + (svg.clientWidth - (svg.clientWidth/4)) + "' y1='" + currentY + "' x2='" + (svg.clientWidth - (svg.clientWidth/4)) + "' y2='" + (currentY + generationYOffset) + "' class='svgLine' />"; //right down
-    currentY += generationYOffset;
+    GenerateLine((svg.clientWidth/4), (svg.clientWidth/8));  //left left
+    GenerateLine((svg.clientWidth/4), (middle-(svg.clientWidth/8)));  //left right
+    GenerateLine((svg.clientWidth - (svg.clientWidth/4)), (middle+(svg.clientWidth/8)));  //right left
+    GenerateLine((svg.clientWidth - (svg.clientWidth/4)), (svg.clientWidth - (svg.clientWidth/8)));  //right right
 
-    svg.innerHTML += "<line x1='" + (svg.clientWidth/4) + "' y1='" + currentY + "' x2='" + (svg.clientWidth/8) + "' y2='" + currentY + "' class='svgLine' />"; //left left
-    svg.innerHTML += "<line x1='" + (svg.clientWidth/4) + "' y1='" + currentY + "' x2='" + (middle-(svg.clientWidth/8)) + "' y2='" + currentY + "' class='svgLine' />"; //left right
-    svg.innerHTML += "<line x1='" + (svg.clientWidth - (svg.clientWidth/4)) + "' y1='" + currentY + "' x2='" + (middle+(svg.clientWidth/8)) + "' y2='" + currentY + "' class='svgLine' />"; //right left
-    svg.innerHTML += "<line x1='" + (svg.clientWidth - (svg.clientWidth/4)) + "' y1='" + currentY + "' x2='" + (svg.clientWidth - (svg.clientWidth/8)) + "' y2='" + currentY + "' class='svgLine' />"; //right right
+    GenerateObject((svg.clientWidth/8), "Test"); //Object left left
+    GenerateObject((middle-(svg.clientWidth/8)), "Test"); //Object left right
+    GenerateObject((middle+(svg.clientWidth/8)), "Test"); //Object right left
+    GenerateObject((svg.clientWidth - (svg.clientWidth/8)), "Test"); //Object right right
 
-    //Objects Here
+    GenerateLine((svg.clientWidth/8), (svg.clientWidth/8), true); //left left down
+    GenerateLine((middle+(svg.clientWidth/8)), (middle+(svg.clientWidth/8)), true); //left right down
+    GenerateLine((middle-(svg.clientWidth/8)), (middle-(svg.clientWidth/8)), true); //right left down
+    GenerateLine((svg.clientWidth - (svg.clientWidth/8)), (svg.clientWidth - (svg.clientWidth/8)), true, true); //right right down
+}
 
-    svg.innerHTML += "<line x1='" + (svg.clientWidth/8) + "' y1='" + currentY + "' x2='" + (svg.clientWidth/8) + "' y2='" + (currentY + generationYOffset) + "' class='svgLine' />"; //left left down
-    svg.innerHTML += "<line x1='" + (middle+(svg.clientWidth/8)) + "' y1='" + currentY + "' x2='" + (middle+(svg.clientWidth/8)) + "' y2='" + (currentY + generationYOffset) + "' class='svgLine' />"; //left right down
-    svg.innerHTML += "<line x1='" + (middle-(svg.clientWidth/8)) + "' y1='" + currentY + "' x2='" + (middle-(svg.clientWidth/8)) + "' y2='" + (currentY + generationYOffset) + "' class='svgLine' />"; //right left down
-    svg.innerHTML += "<line x1='" + (svg.clientWidth - (svg.clientWidth/8)) + "' y1='" + currentY + "' x2='" + (svg.clientWidth - (svg.clientWidth/8)) + "' y2='" + (currentY + generationYOffset) + "' class='svgLine' />"; //right right down
-    currentY += generationYOffset;
-    
-    //Objects Here
+//Generate Line
+function GenerateLine(fromX, ToX, changeY, changeCurrentY)
+{
+    if(changeY)//When changed vertically
+    {
+        svg.innerHTML += "<line x1='" + fromX + "' y1='" + svgCurrentY + "' x2='" + ToX + "' y2='" + (svgCurrentY + generationYOffset) + "' class='svgLine' />";
+        if(changeCurrentY)
+        {
+            svgCurrentY += generationYOffset;
+        }
+    }
+    else if(changeY == false || changeY == undefined) //When horizontal 
+    {
+        svg.innerHTML += "<line x1='" + fromX + "' y1='" + svgCurrentY + "' x2='" + ToX + "' y2='" + svgCurrentY + "' class='svgLine' />";
+    }
+}
+
+//Generate Object from generations
+function GenerateObject(rectX, text)
+{
+    svg.innerHTML += "<rect x='" + (rectX - (rectWidth/2)) + "' y='" + (svgCurrentY - rectHeight) + "' width='" + rectWidth + "' height='" + rectHeight + "' class='svgRect' />"; //Rectangle
+
+    svg.innerHTML += "<text x='" + (rectX - (rectWidth/2)) + "' y='" + ((svgCurrentY - rectHeight) + (rectWidth/2.5)) + "' class='svgText'>" + text + "</text>" //Text
 }

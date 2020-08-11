@@ -53,12 +53,20 @@ select, option
     width:100%;
 }
 
+#treeBox
+{
+    margin:0;
+    padding:0;
+    clear: both;
+    width:100%;
+}
 
 svg
 {
     width: 100%;
     margin: 0 auto;
     text-align: center;
+    height:100%;
 }
 
 .svgLine
@@ -66,25 +74,21 @@ svg
     z-index: 0;
     stroke:rgb(0,0,0);
     stroke-width:5;
+
 }
 
 .svgRect
 {
     z-index: 1;
     fill:rgb(255,255,255);
+    fill-opacity:100%;
     stroke-width:3;
-    stroke:rgb(0,0,0)
+    stroke:rgb(0,0,0);
+    stroke-linecap: round;
 }
 
 .svgText
 {
     z-index: 2;
-}
-
-#treeBox
-{
-    margin:0;
-    padding:0;
-    clear: both;
-    width:100%;
+    fill: rgb(0,0,0);
 }
