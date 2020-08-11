@@ -1,0 +1,31 @@
+body
+{
+    font-family: "Lucida Console", Monaco, monospace; 
+}
+
+input
+{
+    font-family: "Lucida Console", Monaco, monospace; 
+}
+
+#settingsBox
+{
+    margin:0;
+    padding:0;
+    clear: both;
+    width:100%;
+}
+
+.GenerationBox
+{
+    float:left;
+    margin-right:2.5em;
+}
+
+#treeBox
+{
+    margin:0;
+    padding:0;
+    clear: both;
+    width:100%;
+}
