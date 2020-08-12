@@ -131,6 +131,8 @@ function AddInput(X, Y, where, addSelect)
         UpdateSelect(X);
     }
 
+
+    //TEMP change to height to class GenerationBox 
     //Find Highest generation
     var maxHeight = 1;
     var maxHeightId = 1;
@@ -277,6 +279,8 @@ var svgCurrentY = 50;
 //Y offset between generations
 var generationYOffset = 50;
 
+var xMargin = 50;
+
 //Rect
 var rectWidth = 150;
 var rectHeight = 30;
@@ -295,8 +299,75 @@ function GenerateTree()
 
     //Generate 
 
-    //TEMP
-    GenerateObject((svg.clientWidth/2), "Parent1 Gen1"); //Object
+    /* 
+        If %2 != 0 than put middle on in the middle of range for this generation 
+
+        (svg.clientWidth/2) - middle of page
+
+        svg.clientWidth - right side of page
+
+        0 - left side of page
+
+        Maybe put generating one line of generation in separate function 
+
+        loop
+        {
+            generate objects
+            down from each object
+            left right from each down (object from higher generation)
+        }
+    */
+
+    var spaceBetweenObjects;
+    var currentX;
+    
+    //X
+    for(var i=0; i<generations.length; i++)
+    {
+        //Start with offset for objects
+        currentX = rectWidth/2;
+
+        //Y
+        for(var j=0; j<generations[i].length; j++)
+        {
+            //If only one than place in the middle
+            if(generations[i].length == 1)
+            {
+                currentX = (svg.clientWidth/2);
+            }
+            else
+            {
+                //Fixed space between object
+                spaceBetweenObjects = (svg.clientWidth / generations[i].length);
+
+                //Begin with offset than use space between
+                if(j == 0)
+                {
+                    currentX += ((svg.clientWidth - spaceBetweenObjects) / generations[i].length) - rectWidth; //TEMP improve this
+                }
+                else
+                {
+                    currentX += spaceBetweenObjects;
+                }
+            }
+            //Generate object
+            GenerateObject(currentX, generations[i][j][0]);
+
+            //Generate line down
+            GenerateLine(currentX, currentX, true, j == (generations[i].length-1) ? true : false);
+
+            //TEMP Maybe loop and improve it
+            //Generate line Right
+            GenerateLine(currentX, i==0 ? currentX : (currentX + spaceBetweenObjects));
+
+            //Generate line Left
+            GenerateLine(currentX, i==0 ? currentX : (currentX - spaceBetweenObjects));
+        }
+    }
+
+
+    //TEMP TODO Dynamic Generation
+    /*GenerateObject((svg.clientWidth/2), "Parent1 Gen1"); //Object
 
     GenerateLine((svg.clientWidth/2), (svg.clientWidth/2), true, true); //down
 
@@ -322,9 +393,7 @@ function GenerateTree()
     GenerateLine((svg.clientWidth/8), (svg.clientWidth/8), true); //left left down
     GenerateLine(((svg.clientWidth/2)+(svg.clientWidth/8)), ((svg.clientWidth/2)+(svg.clientWidth/8)), true); //left right down
     GenerateLine(((svg.clientWidth/2)-(svg.clientWidth/8)), ((svg.clientWidth/2)-(svg.clientWidth/8)), true); //right left down
-    GenerateLine((svg.clientWidth - (svg.clientWidth/8)), (svg.clientWidth - (svg.clientWidth/8)), true, true); //right right down
-
-    console.log(generations);
+    GenerateLine((svg.clientWidth - (svg.clientWidth/8)), (svg.clientWidth - (svg.clientWidth/8)), true, true); //right right down*/
 }
 
 //Generate Line
