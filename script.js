@@ -131,8 +131,6 @@ function AddInput(X, Y, where, addSelect)
         UpdateSelect(X);
     }
 
-
-    //TEMP change to height to class GenerationBox 
     //Find Highest generation
     var maxHeight = 1;
     var maxHeightId = 1;
@@ -324,35 +322,22 @@ function GenerateTree()
     //X
     for(var i=0; i<generations.length; i++)
     {
-        //Start with offset for objects
-        currentX = rectWidth/2;
+        //Fixed space between object
+        spaceBetweenObjects = (svg.clientWidth / (generations[i].length + 1));
+
+        //Start from left
+        currentX = 0;
 
         //Y
         for(var j=0; j<generations[i].length; j++)
         {
-            //If only one than place in the middle
-            if(generations[i].length == 1)
-            {
-                currentX = (svg.clientWidth/2);
-            }
-            else
-            {
-                //Fixed space between object
-                spaceBetweenObjects = (svg.clientWidth / generations[i].length);
-
-                //Begin with offset than use space between
-                if(j == 0)
-                {
-                    currentX += ((svg.clientWidth - spaceBetweenObjects) / generations[i].length) - rectWidth; //TEMP improve this
-                }
-                else
-                {
-                    currentX += spaceBetweenObjects;
-                }
-            }
+            //add space after each object
+            currentX += spaceBetweenObjects;         
+            
             //Generate object
             GenerateObject(currentX, generations[i][j][0]);
 
+            //TEMP Add if has children
             //Generate line down
             GenerateLine(currentX, currentX, true, j == (generations[i].length-1) ? true : false);
 
@@ -364,7 +349,6 @@ function GenerateTree()
             GenerateLine(currentX, i==0 ? currentX : (currentX - spaceBetweenObjects));
         }
     }
-
 
     //TEMP TODO Dynamic Generation
     /*GenerateObject((svg.clientWidth/2), "Parent1 Gen1"); //Object
