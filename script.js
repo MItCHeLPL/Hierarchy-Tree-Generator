@@ -337,9 +337,25 @@ function GenerateTree()
             //Generate object
             GenerateObject(currentX, generations[i][j][0]);
 
-            //TEMP Add if has children
-            //Generate line down
-            GenerateLine(currentX, currentX, true, j == (generations[i].length-1) ? true : false);
+            //Generate line down if any child use this object as a parent
+            if(i+1 != generations.length)
+            {
+                for(var k=0; k<generations[i+1].length; k++)
+                {
+                    if(generations[i+1][k][1] == j)
+                    {
+                        GenerateLine(currentX, currentX, true);
+                        break;
+                    }
+                }
+            }
+
+            //Move lower on last object from generation
+            if(j == (generations[i].length-1))
+            {
+                svgCurrentY += generationYOffset;
+            }
+
 
             //TEMP Maybe loop and improve it
             //Generate line Right
@@ -381,15 +397,11 @@ function GenerateTree()
 }
 
 //Generate Line
-function GenerateLine(fromX, ToX, changeY, changeCurrentY)
+function GenerateLine(fromX, ToX, changeY)
 {
     if(changeY)//When changed vertically
     {
         svg.innerHTML += "<line x1='" + fromX + "' y1='" + svgCurrentY + "' x2='" + ToX + "' y2='" + (svgCurrentY + generationYOffset) + "' class='svgLine' />";
-        if(changeCurrentY)
-        {
-            svgCurrentY += generationYOffset;
-        }
     }
     else if(changeY == false || changeY == undefined) //When horizontal 
     {
