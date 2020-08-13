@@ -273,8 +273,8 @@ function RemoveGeneration(X)
     }
 }
 
-//SVG
 
+//SVG
 var svg = document.getElementById("svgOutput");
 
 //How deep down are you, start from 50 so objects can fit
@@ -324,12 +324,24 @@ function GenerateTree()
 
     var spaceBetweenObjects;
     var currentX;
+
+    var spaceBetweenObjectsFromNextGen;
     
     //X
     for(var i=0; i<generations.length; i++)
     {
-        //Fixed space between object
+        //Fixed space between objects
         spaceBetweenObjects = (svg.clientWidth / (generations[i].length + 1));
+
+        //Get space between objects from next generation
+        if(i+1 != generations.length)
+        {
+            spaceBetweenObjectsFromNextGen = (svg.clientWidth / (generations[i+1].length + 1));
+        }
+        else
+        {
+            spaceBetweenObjectsFromNextGen = spaceBetweenObjects;
+        }
 
         //Start from left
         currentX = 0;
@@ -362,13 +374,14 @@ function GenerateTree()
                 svgCurrentY += generationYOffset;
             }
 
-
-            //TEMP Maybe loop and improve it
-            //Generate line Right
-            GenerateLine(currentX, i==0 ? currentX : (currentX + spaceBetweenObjects));
-
-            //Generate line Left
-            GenerateLine(currentX, i==0 ? currentX : (currentX - spaceBetweenObjects));
+            //Generate line Right if object isn't last && next object has the same parent
+            if(j != (generations[i].length-1))
+            {
+                if(generations[i][j][1] == generations[i][j+1][1])
+                {
+                    GenerateLine(currentX, (currentX + spaceBetweenObjectsFromNextGen));
+                }   
+            }
         }
     }
 
