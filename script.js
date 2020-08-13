@@ -131,6 +131,12 @@ function AddInput(X, Y, where, addSelect)
         UpdateSelect(X);
     }
 
+    //Update all selects in next generation
+    if(addSelect && generations.length != X-1)
+    {
+        UpdateSelect(X+1);
+    }
+
     //Find Highest generation
     var maxHeight = 1;
     var maxHeightId = 1;
