@@ -132,7 +132,7 @@ function AddInput(X, Y, where, addSelect)
     }
 
     //Update all selects in next generation
-    if(addSelect && generations.length != X-1)
+    if(generations.length != X-1)
     {
         UpdateSelect(X+1);
     }
@@ -302,58 +302,98 @@ function GenerateTree()
     svg.setAttribute("height", (generations.length * generationYOffset) + 3);
 
     //Generate 
-
-    /* 
-        If %2 != 0 than put middle on in the middle of range for this generation 
-
-        (svg.clientWidth/2) - middle of page
-
-        svg.clientWidth - right side of page
-
-        0 - left side of page
-
-        Maybe put generating one line of generation in separate function 
-
-        loop
-        {
-            generate objects
-            down from each object
-            left right from each down (object from higher generation)
-        }
-    */
-
     var spaceBetweenObjects;
     var currentX;
 
-    var spaceBetweenObjectsFromNextGen;
-    
+    var spaceBetweenObjectsFromPrevGen;
+
+    var usedSpaceBetweenObjectsFromPrevGen = false;
+
     //X
     for(var i=0; i<generations.length; i++)
     {
+        //Start from left
+        currentX = 0;
+
         //Fixed space between objects
         spaceBetweenObjects = (svg.clientWidth / (generations[i].length + 1));
 
-        //Get space between objects from next generation
-        if(i+1 != generations.length)
+        //Get space between objects from previous generation
+        if(i != 0)
         {
-            spaceBetweenObjectsFromNextGen = (svg.clientWidth / (generations[i+1].length + 1));
+            //if prev gen had only one object
+            if(generations[i-1].length == 1)
+            {
+                spaceBetweenObjectsFromPrevGen = spaceBetweenObjectsFromPrevGen * (generations[i-1][0][1]+1);
+            }
+            else 
+            {
+                spaceBetweenObjectsFromPrevGen = (svg.clientWidth / (generations[i-1].length + 1));
+            }
+
+            //If parent generation is greater than this generation
+            if(generations[i-1].length > generations[i].length)
+            {
+                spaceBetweenObjects = spaceBetweenObjectsFromPrevGen;
+        
+                currentX = spaceBetweenObjectsFromPrevGen * (generations[i][0][1]);
+            }
+        }
+        if(i > 1)
+        {
+            //If parents parent generation is greater than parent generation
+            if(generations[i-2].length > generations[i-1].length)
+            {
+                spaceBetweenObjectsFromPrevGen = (svg.clientWidth / (generations[i-2].length + 1));
+
+            }
         }
         else
         {
-            spaceBetweenObjectsFromNextGen = spaceBetweenObjects;
+            spaceBetweenObjectsFromPrevGen = spaceBetweenObjects;
         }
 
-        //Start from left
-        currentX = 0;
 
         //Y
         for(var j=0; j<generations[i].length; j++)
         {
-            //add space after each object
-            currentX += spaceBetweenObjects;         
-            
+            usedSpaceBetweenObjectsFromPrevGen = false;
+
             //Generate object
-            GenerateObject(currentX, generations[i][j][0]);
+            if(j != 0)
+            {
+                //if parent changes after previous object move this object under his parent
+                if(generations[i][j-1][1] != generations[i][j][1])
+                {
+                    //add space after each object
+                    currentX = spaceBetweenObjectsFromPrevGen * (generations[i][j][1]+1);
+                    GenerateObject(spaceBetweenObjectsFromPrevGen * (generations[i][j][1]+1), generations[i][j][0]);
+                    usedSpaceBetweenObjectsFromPrevGen = true;
+                }
+                else
+                {
+                    //add space after each object
+                    currentX += spaceBetweenObjects;
+                    GenerateObject(currentX, generations[i][j][0]);
+                }
+            }
+            else
+            {
+                //if this generation has only one object move object directly under the parent
+                if(generations[i].length == 1)
+                {
+                    //add space after each object
+                    currentX = spaceBetweenObjectsFromPrevGen * (generations[i][j][1]+1);
+                    GenerateObject(spaceBetweenObjectsFromPrevGen * (generations[i][j][1]+1), generations[i][j][0]);
+                    usedSpaceBetweenObjectsFromPrevGen = true;
+                }
+                else
+                {
+                    //add space after each object
+                    currentX += spaceBetweenObjects;
+                    GenerateObject(currentX, generations[i][j][0]);
+                }
+            }      
 
             //Generate line down if any child use this object as a parent
             if(i+1 != generations.length)
@@ -379,40 +419,11 @@ function GenerateTree()
             {
                 if(generations[i][j][1] == generations[i][j+1][1])
                 {
-                    GenerateLine(currentX, (currentX + spaceBetweenObjectsFromNextGen));
+                    GenerateLine(currentX, (currentX + spaceBetweenObjects));
                 }   
             }
         }
     }
-
-    //TEMP TODO Dynamic Generation
-    /*GenerateObject((svg.clientWidth/2), "Parent1 Gen1"); //Object
-
-    GenerateLine((svg.clientWidth/2), (svg.clientWidth/2), true, true); //down
-
-    GenerateLine((svg.clientWidth/2), (svg.clientWidth/4));  //left
-    GenerateLine((svg.clientWidth/2), (svg.clientWidth - (svg.clientWidth/4)));  //right
-
-    GenerateObject((svg.clientWidth/4), "Child1 Gen2"); //Object left
-    GenerateObject((svg.clientWidth - (svg.clientWidth/4)), "Child2 Gen2"); //Object right
-
-    GenerateLine((svg.clientWidth/4), (svg.clientWidth/4), true); //left down
-    GenerateLine((svg.clientWidth - (svg.clientWidth/4)), (svg.clientWidth - (svg.clientWidth/4)), true, true); //right down
-
-    GenerateLine((svg.clientWidth/4), (svg.clientWidth/8));  //left left
-    GenerateLine((svg.clientWidth/4), ((svg.clientWidth/2)-(svg.clientWidth/8)));  //left right
-    GenerateLine((svg.clientWidth - (svg.clientWidth/4)), ((svg.clientWidth/2)+(svg.clientWidth/8)));  //right left
-    GenerateLine((svg.clientWidth - (svg.clientWidth/4)), (svg.clientWidth - (svg.clientWidth/8)));  //right right
-
-    GenerateObject((svg.clientWidth/8), "Child1 Gen3"); //Object left left
-    GenerateObject(((svg.clientWidth/2)-(svg.clientWidth/8)), "Child2 Gen3"); //Object left right
-    GenerateObject(((svg.clientWidth/2)+(svg.clientWidth/8)), "Child3 Gen3"); //Object right left
-    GenerateObject((svg.clientWidth - (svg.clientWidth/8)), "Child4 Gen3"); //Object right right
-
-    GenerateLine((svg.clientWidth/8), (svg.clientWidth/8), true); //left left down
-    GenerateLine(((svg.clientWidth/2)+(svg.clientWidth/8)), ((svg.clientWidth/2)+(svg.clientWidth/8)), true); //left right down
-    GenerateLine(((svg.clientWidth/2)-(svg.clientWidth/8)), ((svg.clientWidth/2)-(svg.clientWidth/8)), true); //right left down
-    GenerateLine((svg.clientWidth - (svg.clientWidth/8)), (svg.clientWidth - (svg.clientWidth/8)), true, true); //right right down*/
 }
 
 //Generate Line
@@ -420,7 +431,7 @@ function GenerateLine(fromX, ToX, changeY)
 {
     if(changeY)//When changed vertically
     {
-        svg.innerHTML += "<line x1='" + fromX + "' y1='" + svgCurrentY + "' x2='" + ToX + "' y2='" + (svgCurrentY + generationYOffset) + "' class='svgLine' />";
+        svg.innerHTML += "<line x1='" + fromX + "' y1='" + (svgCurrentY - 3) + "' x2='" + ToX + "' y2='" + ((svgCurrentY + generationYOffset) - 3) + "' class='svgLine' />";
     }
     else if(changeY == false || changeY == undefined) //When horizontal 
     {
@@ -431,7 +442,9 @@ function GenerateLine(fromX, ToX, changeY)
 //Generate Object from generations
 function GenerateObject(rectX, text)
 {
-    svg.innerHTML += "<rect x='" + (rectX - (rectWidth/2)) + "' y='" + ((svgCurrentY - rectHeight) + 1 ) + "' width='" + rectWidth + "' height='" + rectHeight + "' class='svgRect' />"; //Rectangle
+    rectWidth = (text.length * 10) + 10;
 
-    svg.innerHTML += "<text x='" + (rectX - (rectWidth/2.1)) + "' y='" + ((svgCurrentY - rectHeight) + (rectWidth/7)) + "' class='svgText'>" + text + "</text>" //Text
+    svg.innerHTML += "<rect x='" + (rectX - (rectWidth/2)) + "' y='" + ((svgCurrentY - rectHeight) - 3) + "' width='" + rectWidth + "' height='" + rectHeight + "' class='svgRect' />"; //Rectangle
+
+    svg.innerHTML += "<text x='" + (rectX - (rectWidth/2) + 5) + "' y='" + ((svgCurrentY - rectHeight) + (rectHeight/1.5)) + "' class='svgText'>" + text + "</text>" //Text
 }
