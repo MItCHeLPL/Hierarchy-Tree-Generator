@@ -1,6 +1,6 @@
 # Hierarchy Tree Generator
 
-Create Hierarchy and Generation trees visualization.
+### Create Hierarchy and Generation trees visualization.
 
 ### [Try it out](https://mitchelpl.github.io/Hierarchy-Tree-Generator/)
 
